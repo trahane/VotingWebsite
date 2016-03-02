@@ -42,14 +42,17 @@ def profileAuth(request):
 
 			}
 	else:
-		votingForm = voteForm(request.POST or None)#,userX = request.user)
+		votingForm = voteForm(request.POST or None,user = request.user)
 		getVoteFlag = studentID.objects.get(userN = request.user)
-		candidatequery = Candidates.objects.all()
+
+		candidatequery = Candidates.objects.all().filter(collegeName = getVoteFlag.collegeName)
+		
 		newListCan =[]
 		newListNum = []
+
 		if votingForm.is_valid():
 			choice = votingForm.cleaned_data['Select_Candidate']
-			print choice
+			print "choice="+str(choice)
 			getTupleList = voteForm.choiceInput
 			for each in getTupleList:
 				newListNum.append(each[0])
@@ -58,10 +61,10 @@ def profileAuth(request):
 			
 			candiName = Candidates.objects.get(full_Name = newListCan[int(choice)-1])
 			candiName.voteCount += 1
-		#	candiName.save()
+			candiName.save()
 						
 			getVoteFlag.vote = True
-		#	getVoteFlag.save()
+			getVoteFlag.save()
 			
 				
 
