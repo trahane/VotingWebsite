@@ -1,20 +1,34 @@
 from django import forms
-from .models import studentID,Candidates
-GLOBAL_VAR = []
+from .models import studentID,Candidates,Colleges
 
 
 
-class StudentSignUpForm(forms.ModelForm):
-	class Meta:
-		model = studentID
-		fields = ['roll_Number','full_Name','city','state','collegeName','city','state','phone_Number']
+######################################################################################################################
 
-class CandidateForm(forms.ModelForm):
+class CollegeForms(forms.ModelForm):
 	class Meta:
 		model = Candidates
-		fields = ['full_Name','email','phone_Number','description','collegeName']
+		fields = '__all__'
+
+######################################################################################################################
+
+class StudentSignUpForm(forms.ModelForm):
+
+	class Meta:
+		model = studentID
+		fields = ['roll_Number','full_Name','city','state','department','userType','collegeName','city','state','phone_Number']
 
 
+######################################################################################################################
+
+class CandidateForm(forms.ModelForm):
+
+	class Meta:
+		model = Candidates
+		fields = ['full_Name','email','phone_Number','description','department','collegeName']
+
+
+######################################################################################################################
 
 class voteForm(forms.Form):
 
@@ -25,8 +39,9 @@ class voteForm(forms.Form):
 
 		uName = studentID.objects.get(userN = self.user)
 		cllgName = uName.collegeName
+		depN = uName.department
 		
-		candiChoice = (Candidates.objects.all().filter(collegeName = cllgName))
+		candiChoice = (Candidates.objects.all().filter(collegeName = cllgName).filter(department = depN))
 		choiceInput = []
 		newList=()
 		i = 1
@@ -50,4 +65,4 @@ class voteForm(forms.Form):
 	Select_Candidate = forms.ChoiceField(widget=forms.RadioSelect, choices=choiceInput)
 
 
-
+######################################################################################################################
